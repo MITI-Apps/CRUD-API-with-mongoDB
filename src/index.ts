@@ -1,16 +1,20 @@
 import express from "express";
 import mongoose from "mongoose";
 import Product from "./models/product.module.js";
-
+import 'dotenv/config'; 
 
 const app = express();
-const PORT = 3000;
-//mongodb://okekem186_db_user:UZsz0oAN3aEVhR9l@ac-ijvreel-shard-00-00.kwihesd.mongodb.net:27017,ac-ijvreel-shard-00-01.kwihesd.mongodb.net:27017,ac-ijvreel-shard-00-02.kwihesd.mongodb.net:27017/?ssl=true&replicaSet=atlas-ip8oxl-shard-0&authSource=admin&appName=MongoLearning
+const PORT = process.env.PORT || 5000;
+const MONGO_URL = process.env.MONGO_URL;
 
 //middleware
 app.use(express.json());
 
-mongoose.connect("mongodb://okekem186_db_user:UZsz0oAN3aEVhR9l@ac-ijvreel-shard-00-00.kwihesd.mongodb.net:27017,ac-ijvreel-shard-00-01.kwihesd.mongodb.net:27017,ac-ijvreel-shard-00-02.kwihesd.mongodb.net:27017/?ssl=true&replicaSet=atlas-ip8oxl-shard-0&authSource=admin&appName=MongoLearning")
+if (!MONGO_URL) {
+  throw new Error("MONGO_URL is not defined in the environment variables");
+}
+
+mongoose.connect(MONGO_URL)
 .then(() => {
   console.log("Connected to MongoDB");
   app.listen(PORT, () => {
