@@ -8,7 +8,7 @@ const getAllProduct = async (req: Request, res: Response) => {
   } catch (error) {
     res.status(500).json({ error: "Failed to fetch products" });
   }
-}
+};
 
 const getProductById = async (req: Request, res: Response) => {
   try {
@@ -35,12 +35,11 @@ const createProduct = async (req: Request, res: Response) => {
 const updateProduct = async (req: Request, res: Response) => {
   try {
     const { id } = req.params
-    const product = await Product.findByIdAndUpdate(id, req.body) 
+    const product = await Product.findByIdAndUpdate(id, req.body, { new: true }); 
     if (!product){
       return res.status(404).json({ error: "Product not found" });
     };
-    const updatedProduct = await Product.findById(id);
-    res.status(200).json(updatedProduct);
+    res.status(200).json(product);
   } catch (error) {
     res.status(500).json({ error: "Failed to update product" });
   }
