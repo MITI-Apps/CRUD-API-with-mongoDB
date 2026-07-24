@@ -11,7 +11,9 @@ const MONGO_URL = process.env.MONGO_URL;
 //middleware
 app.use(express.json());
 
+
 // Define product routes
+
 app.use("/api/products", productRoutes);
 app.use("/api/users", userRoutes);
 
