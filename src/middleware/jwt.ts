@@ -10,11 +10,13 @@ function authJwt(){
         secret,
         algorithms: ["HS256"],
     }); 
+    
     return( req: Request, res: Response, next: NextFunction) => {
         jwtMiddleware(req, res, (err) => {
             if (err) {
                 return res.status(401).json({ error: "Unauthorized" });
             }
+            console.log("token data", (req as any).auth); // Access the decoded token data
             next();
         });
     }

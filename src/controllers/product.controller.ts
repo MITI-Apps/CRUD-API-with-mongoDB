@@ -1,5 +1,6 @@
 import Product from "../models/product.module.js";
 import type { Request, Response } from "express";
+import cloudinary from "../config/cloudinary.js";
 
 const getAllProduct = async (req: Request, res: Response) => {
   try {
@@ -24,11 +25,23 @@ const getProductById = async (req: Request, res: Response) => {
 
 const createProduct = async (req: Request, res: Response) => {
   try {
-    const product = new Product(req.body);
+    const { name, price, quantity } = req.body;
+
+    let imageUrl = "";
+    if (req.file) {
+      // upload buffer to cloudinary using upload_stream
+      const b64 = req.file.buffer.toString("base64");// convert buffer to base64
+      const dataURI = `data:${req.file.mimetype};base64,${b64}`;// create data URI from base64 string
+      const result = await cloudinary.uploader.upload(dataURI, {
+        folder: "products",
+      });
+      imageUrl = result.secure_url;
+    }
+    const product = new Product({ name, price, quantity, image: imageUrl });
     await product.save();
     res.status(201).json(product);
   } catch (error) {
-    res.status(500).json({ error: "Failed to create product" });
+    res.status(500).json({ error: error });
   }
 };
 

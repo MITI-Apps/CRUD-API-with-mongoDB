@@ -1,7 +1,7 @@
 import express from "express";
 const router = express.Router();
 import { createUser, getAllUsers, getUserById, loginUser } from "../controllers/user.controller.js";
-import authJwt from "../helpers/jwt.js";
+import authJwt from "../middleware/jwt.js";
 
 
 router.post("/", createUser);

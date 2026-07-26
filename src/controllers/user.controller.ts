@@ -30,7 +30,8 @@ const createUser = async (req: Request, res: Response) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = new User({ ...req.body, password: hashedPassword });
     await user.save();
-    res.status(201).json(user);
+    const savedUser = await User.findById(user._id).select("-password"); // Exclude password field from the response
+    res.status(201).json(savedUser);
   } catch (error) {
     res.status(500).json({ error: "Failed to create user" });
   }
