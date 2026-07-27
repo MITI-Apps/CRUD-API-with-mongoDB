@@ -2,16 +2,16 @@ import express from "express";
 const router = express.Router();
 import { createUser, getAllUsers, getUserById, loginUser } from "../controllers/user.controller.js";
 import authJwt from "../middleware/jwt.js";
+import validate from "../middleware/validate.js";
+import { createUserSchema, loginUserSchema } from "../validation/user.validation.js";
+
+router.post("/", validate(createUserSchema), createUser);
+
+router.post("/login", validate(loginUserSchema), loginUser);
 
 
-router.post("/", createUser);
+router.get("/", authJwt(), getAllUsers);
 
-router.post("/login", loginUser);
-
-router.use(authJwt());
-
-router.get("/", getAllUsers);
-
-router.get("/:id", getUserById);
+router.get("/:id", authJwt(), getUserById);
 
 export default router;
