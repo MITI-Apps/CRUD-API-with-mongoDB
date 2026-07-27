@@ -21,9 +21,20 @@ const createProductSchema = Joi.object({
 });
 
 const updateProductSchema = Joi.object({
-  name: Joi.string().empty("").optional(),
-  price: Joi.number().positive().optional(),
-  quantity: Joi.number().integer().min(0).optional(),
+  name: Joi.string().min(3).max(30).optional().messages({
+    "string.empty": "Product name cannot be empty",
+    "string.min": "Name must be at least 3 characters long",
+    "string.max": "Name cannot exceed 30 characters"
+  }),
+  price: Joi.number().positive().optional().messages({
+    "number.base": "Price must be a number",
+    "number.positive": "Price must be a positive number",
+  }),
+  quantity: Joi.number().integer().min(0).optional().messages({
+    "number.base": "Quantity must be a number",
+    "number.integer": "Quantity must be a whole number",
+    "number.min": "Quantity cannot be negative",
+  }),
 }).min(1).messages({
   "object.min": "At least one field must be provided for update",
 });
